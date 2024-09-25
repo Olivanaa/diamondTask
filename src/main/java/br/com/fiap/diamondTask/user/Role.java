@@ -1,7 +1,7 @@
 package br.com.fiap.diamondTask.user;
 
 public enum Role {
-    ADMIN,
-    USER,
-    MANAGER
+    ROLE_ADMIN,
+    ROLE_USER,
+    ROLE_MANAGER
 }

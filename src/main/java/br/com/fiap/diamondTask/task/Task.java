@@ -1,10 +1,8 @@
 package br.com.fiap.diamondTask.task;
 
+import br.com.fiap.diamondTask.user.Role;
 import br.com.fiap.diamondTask.user.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "tarefas")
+//@Table(name = "tarefas")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,11 +22,13 @@ public class Task {
     UUID id;
     String titulo;
     String descricao;
-    String dataEntrega;
-    String prioridade;
+    LocalDateTime dataEntrega;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 
-    @ManyToOne
-    User user;
+    @Enumerated(EnumType.STRING)
+    Prioridade prioridade;
+
+    //@ManyToOne
+    //User user;
 }

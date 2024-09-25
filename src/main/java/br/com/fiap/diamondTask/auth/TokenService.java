@@ -18,22 +18,22 @@ public class TokenService {
     private final UserRepository userRepository;
     private Algorithm algorithm;
 
-    public TokenService(UserRepository userRepository, @Value("${jwt.secret}") String secret) {
+    public TokenService(UserRepository userRepository, @Value("01918ad7-33dd-7db2-ba4d-af8ad3b0ddd2") String secret) {
         this.userRepository = userRepository;
         this.algorithm = Algorithm.HMAC256(secret);
     }
 
     public Token generateToken(User user) {
-        var expiresAt = LocalDateTime.now().plusMinutes(10).toInstant(ZoneOffset.ofHours(-3));
+        var expiresAt = LocalDateTime.now().plusHours(10).toInstant(ZoneOffset.ofHours(-3));
 
         var token = JWT.create()
                 .withSubject(user.getId().toString())
                 .withClaim("nome", user.getNome())
                 .withClaim("email", user.getEmail())
-                .withClaim("role", user.getRole())
+                .withClaim("role", user.getRole().name())
                 .withExpiresAt(expiresAt)
                 .sign(algorithm);
-        return new Token(token, user.getNome(), user.getId().toString(), user.getRole(), user.getEmail());
+        return new Token(token, user.getNome(), user.getId().toString(), user.getRole().name(), user.getEmail());
     }
 
     public User getUser(String token) {
@@ -41,8 +41,10 @@ public class TokenService {
                 .build()
                 .verify(token)
                 .getSubject();
+        System.out.println("ID do usuário obtido do token: " + id);
 
-        return userRepository.findById(Integer.valueOf(id))
+
+        return userRepository.findById(UUID.fromString(id))
                 .orElseThrow( () -> new UsernameNotFoundException("User not found"));
     }
 }

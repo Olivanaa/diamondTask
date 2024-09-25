@@ -19,7 +19,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/login").permitAll()
                 .requestMatchers(HttpMethod.GET,"/").permitAll()
                 .requestMatchers(HttpMethod.POST,"/users").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/users/{email}").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,"/users").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/users/avatars/**").permitAll()
+
                 .anyRequest().authenticated()
         );
         http.addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);

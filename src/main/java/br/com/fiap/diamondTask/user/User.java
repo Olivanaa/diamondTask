@@ -17,15 +17,16 @@ import java.util.UUID;
 @NoArgsConstructor
 public class User {
     @Id
-    UUID id;
-    String email;
-    String senha;
-    String nome;
-    String avatar;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
+    UUID id = UUID.randomUUID();
+    private String email;
+    private String senha;
+    private String nome;
+    private String avatar;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
-    Role role;
+    private Role role;
+
 
 }

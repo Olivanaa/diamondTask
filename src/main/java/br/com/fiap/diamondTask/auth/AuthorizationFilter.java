@@ -27,12 +27,18 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")) {
+        if( header == null ){
+            System.out.println("Sem autorização");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (!header.startsWith("Bearer ")) {
             response.setStatus(401);
             response.addHeader("Content-Type", "application/json");
             response.getWriter().write("""
                         {
-                            "message": "Token must start with 'Bearer '"
+                            "message": "Token must start with 'Bearer '"    
                         }
                     """);
             return;
@@ -42,14 +48,19 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             var token = header.replace("Bearer ", "");
             User user = tokenService.getUser(token);
 
+            System.out.println("Usuário autenticado: " + user.getEmail());
+
             var auth = new UsernamePasswordAuthenticationToken(
                     user.getEmail(),
                     user.getSenha(),
-                    List.of(new SimpleGrantedAuthority(user.getRole()))
+                    List.of(new SimpleGrantedAuthority(user.getRole().name()))
             );
             SecurityContextHolder.getContext().setAuthentication(auth);
             filterChain.doFilter(request, response);
+            System.out.println("Usuário autenticado: " + user.getRole().name());
+
         } catch (Exception e) {
+            System.out.println("Erro de autorização: " + e.getMessage());
             response.setStatus(403);
             response.addHeader("Content-Type", "application/json");
             response.getWriter().write("""
