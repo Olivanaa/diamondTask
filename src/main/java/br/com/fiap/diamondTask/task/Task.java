@@ -9,17 +9,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Entity
 @Data
-//@Table(name = "tarefas")
+@Table(name = "tarefas")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Task {
     @Id
-    UUID id;
+    UUID id = UUID.randomUUID();
     String titulo;
     String descricao;
     LocalDateTime dataEntrega;
@@ -29,6 +30,8 @@ public class Task {
     @Enumerated(EnumType.STRING)
     Prioridade prioridade;
 
-    //@ManyToOne
-    //User user;
+    @ManyToOne
+    User user;
+
+
 }
